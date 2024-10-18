@@ -1,84 +1,78 @@
 #include <stdio.h>
-#include <string.h>
-#include <regex.h>
-
-#define MAX_INPUT_LENGTH 100
 
 int main() {
-    char name[MAX_INPUT_LENGTH];
-    char email[MAX_INPUT_LENGTH];
-    char phone[MAX_INPUT_LENGTH];
+    char name[100];
+    char email[100];
+    char num[100];
+    int numflag =1;
+    int nameflag = 1;
+    int emailflag = 1;
+    int emailflag1 = 0;
 
-    // Input Name
-    printf("Enter your name: ");
-    fgets(name, sizeof(name), stdin);
-    name[strcspn(name, "\n")] = '\0';  // Remove newline character
+    printf("Enter Your Name: ");
+    scanf("%99[^\n]", name);
 
-    // Input Email
-    printf("Enter your email: ");
-    fgets(email, sizeof(email), stdin);
-    email[strcspn(email, "\n")] = '\0';  // Remove newline character
+    printf("Enter Your Email: ");
+    scanf("%99s", email);
+    
+    printf("Enter Your Phone Number: ");
+    scanf("%99s", num);
 
-    // Input Phone Number
-    printf("Enter your phone number: ");
-    fgets(phone, sizeof(phone), stdin);
-    phone[strcspn(phone, "\n")] = '\0';  // Remove newline character
-
-    // Validation variables
-    int isValid = 1;
-
-    // Validate Name
-    regex_t regexName;
-    int retiName = regcomp(&regexName, "^[A-Za-z ]+$", 0);
-    if (retiName) {
-        fprintf(stderr, "Could not compile regex for name\n");
-        return 1;
-    }
-    retiName = regexec(&regexName, name, 0, NULL, 0);
-    regfree(&regexName);
-
-    if (retiName) {
-        printf("Invalid name. Name can only contain alphabetic characters and spaces.\n");
-        isValid = 0;
+    for (int i = 0; name[i] != '\0'; i++) {
+        if (!((name[i] >= 'A' && name[i] <= 'Z') || (name[i] >= 'a' && name[i] <= 'z') || (name[i] == ' '))) {
+            nameflag = 0;
+            break;
+        }
     }
 
-    // Validate Email
-    regex_t regexEmail;
-    int retiEmail = regcomp(&regexEmail, "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$", 0);
-    if (retiEmail) {
-        fprintf(stderr, "Could not compile regex for email\n");
-        return 1;
+    for (int i = 0; email[i] != '\0'; i++) {
+        if (!((email[i] >= 'A' && email[i] <= 'Z') || (email[i] >= 'a' && email[i] <= 'z') ||
+              (email[i] >= '0' && email[i] <= '9') || (email[i] == '.') || (email[i] == '_') ||
+              (email[i] == '-') || (email[i] == '@'))) {
+            emailflag = 0;
+            break;
+        }
+        if (email[i] == '@') {
+            emailflag1 += 1; 
+        }
     }
-    retiEmail = regexec(&regexEmail, email, 0, NULL, 0);
-    regfree(&regexEmail);
-
-    if (retiEmail) {
-        printf("Invalid email. Please enter a valid email address.\n");
-        isValid = 0;
+    int i;
+    if(num[0] =='+'){
+        i=1;
+    }else{
+      i=0;  
     }
-
-    // Validate Phone Number
-    regex_t regexPhone;
-    int retiPhone = regcomp(&regexPhone, "^\\+?[0-9][0-9 .-]*$", 0);
-    if (retiPhone) {
-        fprintf(stderr, "Could not compile regex for phone number\n");
-        return 1;
+    for(;num[i]!='\0';i++){
+        if (!((num[i] >= '0' && num[i] <= '9') || num[i] == ' ' || num[i] == '-')) {
+        numflag = 0;
+        break;
+        }
+        
+    
     }
-    retiPhone = regexec(&regexPhone, phone, 0, NULL, 0);
-    regfree(&regexPhone);
-
-    if (retiPhone) {
-        printf("Invalid phone number. Please enter a valid phone number.\n");
-        isValid = 0;
-    }
-
-    // Print valid inputs if all are valid
-    if (isValid) {
-        printf("Valid inputs:\n");
+    if (nameflag == 0) {
+        printf("Name can only contain spaces & (A-Z, a-z) characters\n");
+    } else {
         printf("Name: %s\n", name);
-        printf("Email: %s\n", email);
-        printf("Phone: %s\n", phone);
     }
 
+    if (emailflag == 0 || emailflag1 != 1) {
+        printf("Email can only contain periods (.), hyphens (-), underscores (_), numbers (0-9) & must include exactly 1 @ symbol\n");
+    } else {
+        printf("Email: %s\n", email);
+    }
+    if(numflag == 0) {
+        printf("PhoneNumber can only contain numbers(0-9), Hyphen(-), spaces & optional plusSign(+) at first place");
+    }else{
+        printf("PhoneNumber: %s\n", num);
+    }
     return 0;
 }
+
+
+
+
+
+
+
+
